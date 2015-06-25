@@ -25,7 +25,7 @@ def populate():
              title='Learn Python in 10 Minutes',
              url='http://www.korokithakis.net/tutorials/python/')
 
-    django_cat = add_cat('Django', views=64, likes=32)
+    django_cat = add_cat('Django', views=1025, likes=32)
 
     add_page(cat=django_cat,
              title='Official Django Tutorial',
@@ -48,6 +48,12 @@ def populate():
     add_page(cat=frame_cat,
              title='Flask',
              url='http://flask.pocoo.org')
+
+    admin_cat = add_cat('Admin', views=1024, likes=1024)
+
+    add_page(cat=admin_cat,
+             title='Django Admin',
+             url='https://docs.djangoproject.com/en/1.8/ref/contrib/admin/')
 
     # Print out what we have added to the user.
     for c in Category.objects.all():
