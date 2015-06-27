@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
@@ -7,9 +8,35 @@ from rango.models import Category, Page
 
 
 def index(request):
-    category_list = Category.objects.order_by('-views')[:5]
-    context_dict = {'categories': category_list}
-    return render(request, 'rango/index.html', context_dict)
+    # category_list = Category.objects.all()
+    category_list = Category.objects.order_by('-likes')[:5]
+    page_list = Page.objects.order_by('-views')[:5]
+
+    context_dict = {'categories': category_list, 'pages': page_list}
+
+    visits = request.session.get('visits', 1)
+
+    reset_last_visit_time = False
+
+    last_visit = request.session.get('last_visit')
+
+    if last_visit:
+        last_visit_time = datetime.strptime(last_visit[:-7], '%Y-%m-%d %H:%M:%S')
+
+        if (datetime.now() - last_visit_time).seconds > 0:
+            visits = visits + 1
+            reset_last_visit_time = True
+    else:
+        reset_last_visit_time = True
+
+    if reset_last_visit_time:
+        request.session['last_visit'] = str(datetime.now())
+        request.session['visits'] = visits
+
+    context_dict['visits'] = visits
+
+    response = render(request, 'rango/index.html', context_dict)
+    return response
 
 
 def about(request):
@@ -140,3 +167,30 @@ def restricted(request):
 def user_logout(request):
     logout(request)
     return HttpResponseRedirect('/rango/')
+
+
+# def test_cookie(request):
+#     if 'id' in request.COOKIES:
+#         cookie_id = request.COOKIES['id']
+#         return HttpResponse('Got cookie with id=%s' % cookie_id)
+#     else:
+#         resp = HttpResponse('No id cookie! Sending cookie to client')
+#         resp.set_cookie('id', 'some_value_99')
+#         return resp
+#
+#
+# def test_count_session(request):
+#     if 'count' in request.session:
+#         request.session['count'] += 1
+#         return HttpResponse('new counts=%s' % request.session['count'])
+#     else:
+#         request.session['count'] = 1
+#         return HttpResponse('No count in session. Setting to 1')
+#
+#
+# def test_user(request):
+#     user_str = str(request.user)
+#     if request.user.is_authenticated():
+#         return HttpResponse('%s is logged in' % user_str)
+#     else:
+#         return HttpResponse('%s is not logged in' % user_str)
