@@ -40,7 +40,29 @@ def index(request):
 
 
 def about(request):
-    return render(request, 'rango/about.html')
+    context_dict = {}
+    visits = request.session.get('visits', 1)
+
+    reset_last_visit_time = False
+
+    last_visit = request.session.get('last_visit')
+
+    if last_visit:
+        last_visit_time = datetime.strptime(last_visit[:-7], '%Y-%m-%d %H:%M:%S')
+
+        if (datetime.now() - last_visit_time).seconds > 5:
+            visits = visits + 1
+            reset_last_visit_time = True
+    else:
+        reset_last_visit_time = True
+
+    if reset_last_visit_time:
+        request.session['last_visit'] = str(datetime.now())
+        request.session['visits'] = visits
+
+    context_dict['visits'] = visits
+
+    return render(request, 'rango/about.html', context_dict)
 
 
 def category(request, category_name_slug):
