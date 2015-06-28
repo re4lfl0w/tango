@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
+from rango.bing_search import run_query
 from rango.forms import CategoryForm, PageForm, UserForm, UserProfileForm
 from rango.models import Category, Page
 
@@ -190,6 +191,18 @@ def user_logout(request):
     logout(request)
     return HttpResponseRedirect('/rango/')
 
+
+def search(request):
+    result_list = []
+
+    if request.method == 'POST':
+        query = request.POST['query'].strip()
+
+        if query:
+            result_list = run_query(query)
+
+    return render(request, 'rango/search.html',
+        {'result_list': result_list})
 
 # def test_cookie(request):
 #     if 'id' in request.COOKIES:
