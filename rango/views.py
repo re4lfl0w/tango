@@ -302,8 +302,10 @@ def suggest_category(request):
     starts_with = ''
     if request.method == 'GET':
         starts_with = request.GET['suggestion']
+        cat_list = get_category_list(8, starts_with)
+        if starts_with == '':
+            cat_list = Category.objects.all()
 
-    cat_list = get_category_list(8, starts_with)
     return render(request, 'rango/category_list.html',
         {'cat_list': cat_list})
 
