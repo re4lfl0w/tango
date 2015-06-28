@@ -1,8 +1,10 @@
 from datetime import datetime
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 from rango.bing_search import run_query
 from rango.forms import CategoryForm, PageForm, UserForm, UserProfileForm
 from rango.models import Category, Page
@@ -68,18 +70,33 @@ def about(request):
 
 def category(request, category_name_slug):
     context_dict = {}
+    context_dict['result_list'] = None
+    context_dict['query'] = None
+
+    if request.method == 'POST':
+        query = request.POST['query'].strip()
+
+        if query:
+            result_list = run_query(query)
+
+            context_dict['result_list'] = result_list
+            context_dict['query'] = query
 
     try:
-        category = Category.objects.get(slug=category_name_slug)
+        category = get_object_or_404(Category, slug=category_name_slug)
         context_dict['category_name'] = category.name
 
-        pages = Page.objects.filter(category=category)
+        pages = Page.objects.filter(category=category).order_by('-views')
         context_dict['pages'] = pages
         context_dict['category'] = category
     except Category.DoesNotExist:
         pass
 
+    if not context_dict['query']:
+        context_dict['query'] = category.name
+
     return render(request, 'rango/category.html', context_dict)
+
 
 
 @login_required
@@ -161,6 +178,34 @@ def register(request):
          'registered': registered})
 
 
+def register_profile(request):
+    registered = False
+    if request.method == 'POST':
+        profile_form = UserProfileForm(data=request.POST)
+        if profile_form.is_valid():
+            # as the same time..??
+            user = User.objects.order_by('-pk')[0]
+
+            profile = profile_form.save(commit=False)
+            profile.user = user
+
+            if 'picture' in request.FILES:
+                profile.picture = request.FILES['picture']
+
+            profile.save()
+            registered = True
+
+            return HttpResponseRedirect(reverse('rango:index'))
+        else:
+            print profile_form.errors
+    else:
+        profile_form = UserProfileForm()
+
+    return render(request, 'rango/profile_registration.html',
+        {'profile_form': profile_form,
+         'registered': registered})
+
+
 def user_login(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -203,6 +248,27 @@ def search(request):
 
     return render(request, 'rango/search.html',
         {'result_list': result_list})
+
+
+def track_url(request):
+    if request.method == 'GET':
+        if 'page_id' in request.GET:
+            # Security issue? not filtering...
+            page_id = request.GET['page_id']
+            if not page_id.isdigit():
+                raise 'You always input digits.'
+
+            try:
+                page = Page.objects.get(pk=page_id)
+                page.views += 1
+                page.save()
+            except:
+                pass
+            else:
+                return HttpResponseRedirect(page.url)
+    return HttpResponseRedirect(reverse('rango:index'))
+
+
 
 # def test_cookie(request):
 #     if 'id' in request.COOKIES:
