@@ -308,6 +308,30 @@ def suggest_category(request):
         {'cat_list': cat_list})
 
 
+def auto_add_page(request):
+    cat_id = None
+    url = None
+    title = None
+    context_dict = {}
+
+    if request.method == 'GET':
+        cat_id = request.GET['category_id']
+        url = request.GET['url']
+        title = request.GET['title']
+        if cat_id:
+            try:
+                category = get_object_or_404(Category, pk=int(cat_id))
+                p = Page.objects.get_or_create(category=category,
+                                               title=title,
+                                               url=url)
+                pages = Page.objects.filter(category=category).order_by('-views')
+                context_dict['pages'] = pages
+            except Exception as e:
+                print(e)
+
+    return render(request, 'rango/page_list.html', context_dict)
+
+
 # def test_cookie(request):
 #     if 'id' in request.COOKIES:
 #         cookie_id = request.COOKIES['id']

@@ -32,4 +32,16 @@ $(document).ready(function () {
             $('#cats').html(data);
         });
     });
+
+    $('.rango-add').click(function () {
+        var catid;
+        var title;
+        var url;
+        catid = $(this).attr('data-catid');
+        title = $(this).attr('data-title');
+        url = $(this).attr('data-url');
+        $.get('/rango/auto_add_page/', {category_id: catid, title: title, url: url}, function (data) {
+            $('#page').html(data);
+        })
+    })
 });

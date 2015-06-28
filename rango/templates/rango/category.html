@@ -48,6 +48,11 @@
                                             <a href="{{ result.link }}">
                                                 {{ result.title }}
                                             </a>
+                                            <button data-catid="{{ category.id }}"
+                                                data-title="{{ result.title }}"
+                                                data-url="{{ result.link }}"
+                                                class="rango-add btn btn-mini btn-info"
+                                                type="button">Add</button>
                                         </h4>
 
                                         <p class="list-group-item-text">
@@ -63,7 +68,7 @@
         </div>
     {% endif %}
 
-    <div>
+    <div id="page">
         {% if category %}
             {% if pages %}
                 <ul>
