@@ -1,11 +1,11 @@
 # How To Tango With Django 1.7
 
-![How To Tango With Django 1.7](http://www.tangowithdjango.com/book17/_static/twd200x200.jpg)
+- <img src="http://www.tangowithdjango.com/book17/_static/twd200x200.jpg" width=200 />
 - 데이비드 비즐리,브라이언 K. 존스 공저/정승원 역 | 인피니티북스 | 690쪽
 - [책 소개](http://www.yes24.com/24/goods/11949491?scode=032&OzSrank=1)
 - [tango with django on github](https://github.com/leifos/tango_with_django)
 - [Tutorial 따라해서 Django로 만든 Rango Homepage](http://re4lfl0w.pythonanywhere.com/rango/)
-- ![Capture index](https://github.com/re4lfl0w/tango/tree/master/static/images/capture_index.png)
+- <img src="https://github.com/re4lfl0w/tango/blob/master/static/images/capture_index.png?raw=true" width=600 alt="capture index">
 
 ## 이 책을 선택한 이유
 
