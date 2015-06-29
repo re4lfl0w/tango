@@ -55,3 +55,16 @@ def add_page(category, title, url, views, first_visit, last_visit):
                                    first_visit=first_visit,
                                    last_visit=last_visit)[0]
     return p
+
+
+class PageModelTests(TestCase):
+    def test_visit_fields(self):
+        utc = pytz.UTC
+        first_visit = utc.localize(datetime(2015, 06, 25, 06, 00))
+        last_visit = utc.localize(datetime(2015, 06, 26, 06, 00))
+        p = add_page('Python', 'Test Python', 'http://naver.com', 0,
+                 first_visit, last_visit)
+        now = utc.localize(datetime.now())
+        self.assertEqual((p.first_visit > now), False)
+        self.assertEqual((p.last_visit > now), False)
+        self.assertEqual((p.last_visit > p.first_visit), True)
