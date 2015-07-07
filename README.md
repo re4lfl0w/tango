@@ -27,34 +27,34 @@
 - TDD
 - AWS Deploy
 
-# 실습하면서 느꼈든 문제점들
+## 실습하면서 느꼈든 문제점들
 
-## 14장 Template Tags
+### 14장 Template Tags
 
 - \_\_init\_\_.py 제대로 작성했는데 문제가 생겼네..
 - 무슨 문제인지는 모르겠지만 다른 파일을 덮어씌웠더니 문제가 해결됐음
 - 아...그냥 만들어만 놓고 저장을 하지 않아서 그런가..?
 - [Django: Unable to load template tags \- Stack Overflow](http://stackoverflow.com/questions/4486288/django-unable-to-load-template-tags): 여기에서 보듯이 파일명을 잘못쓴 줄 알고 확인했는데 아니어서 그냥 덮어씌워버리니까 해결... 이유가 뭘까..?!
 
-## {% get_category_list category %}
+### {% get_category_list category %}
 
 - category를 어디서 받아서 넘기냐?
 - 어쨋든 결과적으로 보면 결과가 제대로 css에 active class가 적용이 되긴 됐는데
 - 저 category를 어디서 받는지를 모르니 답답한 노릇이네
 - templatetags를 내가 몰라서 그런가??
 
-## Bing API
+### Bing API
 
 - [Bing Search API Quick Start and Code Samples.docx \- Microsoft Word Online](https://onedrive.live.com/view.aspx?resid=9C9479871FBFA822!112&app=Word&authkey=!ANNnJQREB0kDC04): Bing Search API 설명서 잘 나옴
 - [15.5. optparse — Parser for command line options — Python 2.7.10 documentation](https://docs.python.org/2/library/optparse.html): 많이 쓰는거라서 외우고 있어야 될 것 같은데..?
 
-## 20. Automated Testing
+### 20. Automated Testing
 
-### can't compare offset-naive and offset-aware datetimes
+#### can't compare offset-naive and offset-aware datetimes
 
 - [Django: can’t compare offset\-naive and offset\-aware datetimes error | Wael BEN ZID ELGUEBSI](https://benzidwael.wordpress.com/2013/12/11/django-cant-compare-offset-naive-and-offset-aware-datetimes-error/): 시간 정보 짜증나는군. datetime.now()가 aware라서 pytz로 naive로 바꿔줘야 되는듯
 
-## deploy
+### deploy
 
 - [python \- Django gives Bad Request (400) when DEBUG = False \- Stack Overflow](http://stackoverflow.com/questions/19875789/django-gives-bad-request-400-when-debug-false)
 - **settings.py** 에서 **DEBUG = False**만 하면 **Bad Request(400)**이 뜹니다. 어떻게 해결해야 될까요? 검색해서 찾아보니 **ALLOWED_HOST = ['\*']** 을 넣으면 된다고 하는데 저 같은 경우는 그래도 계속 Bad Request(400)이 뜨네요.
